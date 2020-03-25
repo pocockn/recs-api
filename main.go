@@ -1,8 +1,8 @@
 package main
 
 import (
-	"github.com/labstack/echo"
-	"github.com/labstack/echo/middleware"
+	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo/v4/middleware"
 	"github.com/pocockn/recs-api/config"
 	"github.com/pocockn/recs-api/persistance"
 	"github.com/pocockn/recs-api/recs/delivery"

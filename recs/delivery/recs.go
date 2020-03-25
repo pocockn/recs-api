@@ -8,7 +8,7 @@ import (
 	"strconv"
 
 	_ "github.com/jinzhu/gorm/dialects/mysql"
-	"github.com/labstack/echo"
+	"github.com/labstack/echo/v4"
 	"github.com/pocockn/recs-api/recs"
 )
 

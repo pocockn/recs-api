@@ -5,7 +5,7 @@ import (
 	"errors"
 	"github.com/golang/mock/gomock"
 	"github.com/jinzhu/gorm"
-	"github.com/labstack/echo"
+	"github.com/labstack/echo/v4"
 	"github.com/pocockn/recs-api/config"
 	"github.com/pocockn/recs-api/models"
 	"github.com/pocockn/recs-api/recs/delivery"

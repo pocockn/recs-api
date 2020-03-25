@@ -1,6 +1,6 @@
 package delivery
 
-import "github.com/labstack/echo"
+import "github.com/labstack/echo/v4"
 
 // Registers routes for our api.
 func (h *Handler) Register(e *echo.Echo) {
