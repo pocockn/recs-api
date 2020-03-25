@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"github.com/labstack/echo"
 	"github.com/pocockn/awswrappers/s3"
-	"github.com/pocockn/shouts-api/config"
+	"github.com/pocockn/recs-api/config"
 	"mime/multipart"
 	"net/http"
 )

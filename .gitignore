@@ -13,6 +13,6 @@
 
 /vendor
 
-shouts-api
+recs-api
 .DS_Store
 .idea

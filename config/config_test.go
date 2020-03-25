@@ -4,7 +4,7 @@ import (
 	"os"
 	"testing"
 
-	"github.com/pocockn/shouts-api/config"
+	"github.com/pocockn/recs-api/config"
 	"github.com/stretchr/testify/assert"
 )
 

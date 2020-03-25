@@ -3,8 +3,8 @@ package persistance
 import (
 	"fmt"
 	"github.com/jinzhu/gorm"
-	"github.com/pocockn/shouts-api/config"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
+	"github.com/pocockn/recs-api/config"
 )
 
 type (
@@ -28,7 +28,7 @@ func NewConnection(config config.Config) (*GormDB, error) {
 func (g GormDB) Connect() (*gorm.DB, error) {
 	gormDb, err := gorm.Open("mysql", g.url)
 	if err != nil {
-		return nil, fmt.Errorf("Unable to open DB connection using GORM: %s", err)
+		return nil, fmt.Errorf("unable to open DB connection using GORM: %s", err)
 	}
 
 	maxConnsPerContainer := g.maxConnections / 4

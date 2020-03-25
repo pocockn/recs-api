@@ -4,7 +4,7 @@ LABEL maintainer="Nick Pocock"
 ARG VERSION
 LABEL version=$VERSION
 
-ADD shouts-api /
+ADD recs-api /
 ADD config /config
 
-ENTRYPOINT ["/shouts-api"]
+ENTRYPOINT ["/recs-api"]

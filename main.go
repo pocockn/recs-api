@@ -3,10 +3,10 @@ package main
 import (
 	"github.com/labstack/echo"
 	"github.com/labstack/echo/middleware"
-	"github.com/pocockn/shouts-api/config"
-	"github.com/pocockn/shouts-api/persistance"
-	"github.com/pocockn/shouts-api/shouts/handler"
-	"github.com/pocockn/shouts-api/shouts/repository"
+	"github.com/pocockn/recs-api/config"
+	"github.com/pocockn/recs-api/persistance"
+	"github.com/pocockn/recs-api/recs/handler"
+	"github.com/pocockn/recs-api/recs/store"
 	"log"
 	"net/http"
 )
@@ -29,14 +29,15 @@ func main() {
 	//TODO: this should come from config.
 	e.Use(
 		middleware.CORSWithConfig(middleware.CORSConfig{
-			AllowOrigins: []string{"http://localhost:8081"},
+			AllowOrigins: []string{"http://localhost:8081", "http://localhost:3000"},
 			AllowMethods: []string{http.MethodGet, http.MethodPut, http.MethodPost, http.MethodDelete},
 		}),
 		middleware.Logger(),
 	)
 
-	shoutRepo := repository.NewShoutsRepository(connection)
-	handler.NewShoutHandler(config, e, shoutRepo)
+	recRepo := store.NewRecsStore(connection)
+	echoHandler := handler.NewRecHandler(config, recRepo)
+	echoHandler.Register(e)
 
 	e.Logger.Fatal(e.Start(":1323"))
 }
