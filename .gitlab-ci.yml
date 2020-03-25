@@ -6,7 +6,7 @@ stages:
 
 build:
   stage: build
-  sript:
+  script:
     - make build
 
 test:
