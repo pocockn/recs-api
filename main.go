@@ -5,7 +5,7 @@ import (
 	"github.com/labstack/echo/middleware"
 	"github.com/pocockn/recs-api/config"
 	"github.com/pocockn/recs-api/persistance"
-	"github.com/pocockn/recs-api/recs/handler"
+	"github.com/pocockn/recs-api/recs/delivery"
 	"github.com/pocockn/recs-api/recs/store"
 	"log"
 	"net/http"
@@ -36,7 +36,7 @@ func main() {
 	)
 
 	recRepo := store.NewRecsStore(connection)
-	echoHandler := handler.NewRecHandler(config, recRepo)
+	echoHandler := delivery.NewHandler(config, recRepo)
 	echoHandler.Register(e)
 
 	e.Logger.Fatal(e.Start(":1323"))
