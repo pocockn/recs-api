@@ -10,7 +10,7 @@ type recsStore struct {
 	Conn *gorm.DB
 }
 
-// NewRecsStore creates a new recsStore struct.
+// NewRecsStore creates a new recsStore struct for interacting with the Gorm connection to the DB.
 func NewRecsStore(conn *gorm.DB) recs.Store {
 	return &recsStore{conn}
 }

@@ -1,4 +1,4 @@
-package handler_test
+package delivery_test
 
 import (
 	"encoding/json"
@@ -8,7 +8,7 @@ import (
 	"github.com/labstack/echo"
 	"github.com/pocockn/recs-api/config"
 	"github.com/pocockn/recs-api/models"
-	"github.com/pocockn/recs-api/recs/handler"
+	"github.com/pocockn/recs-api/recs/delivery"
 	mock_recs "github.com/pocockn/recs-api/recs/mocks"
 	"github.com/stretchr/testify/assert"
 	"net/http"
@@ -21,7 +21,7 @@ func TestFetch(t *testing.T) {
 	controller := gomock.NewController(t)
 	defer controller.Finish()
 
-	recUsecase := mock_recs.NewMockRepository(controller)
+	recUsecase := mock_recs.NewMockStore(controller)
 
 	recUsecase.EXPECT().
 		Fetch(uint(1)).
@@ -34,7 +34,7 @@ func TestFetch(t *testing.T) {
 		}, nil)
 
 	e := echo.New()
-	h := handler.NewRecHandler(config.Config{}, recUsecase)
+	h := delivery.NewHandler(config.Config{}, recUsecase)
 
 	req := httptest.NewRequest(echo.GET, "/recs/:id", nil)
 	req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
@@ -51,7 +51,7 @@ func TestFetchAll(t *testing.T) {
 	controller := gomock.NewController(t)
 	defer controller.Finish()
 
-	recUsecase := mock_recs.NewMockRepository(controller)
+	recUsecase := mock_recs.NewMockStore(controller)
 
 	recUsecase.EXPECT().
 		FetchAll().
@@ -67,7 +67,7 @@ func TestFetchAll(t *testing.T) {
 			}, nil)
 
 	e := echo.New()
-	h := handler.NewRecHandler(config.Config{}, recUsecase)
+	h := delivery.NewHandler(config.Config{}, recUsecase)
 
 	req := httptest.NewRequest(echo.GET, "/recs", nil)
 	req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
@@ -88,7 +88,7 @@ func TestFetchError(t *testing.T) {
 	controller := gomock.NewController(t)
 	defer controller.Finish()
 
-	recUsecase := mock_recs.NewMockRepository(controller)
+	recUsecase := mock_recs.NewMockStore(controller)
 	dummyErr := errors.New("fetch all error")
 
 	recUsecase.EXPECT().
@@ -96,7 +96,7 @@ func TestFetchError(t *testing.T) {
 		Return(nil, dummyErr)
 
 	e := echo.New()
-	h := handler.NewRecHandler(config.Config{}, recUsecase)
+	h := delivery.NewHandler(config.Config{}, recUsecase)
 
 	req := httptest.NewRequest(echo.GET, "/recs", nil)
 	req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
@@ -112,7 +112,7 @@ func TestUpdate(t *testing.T) {
 	controller := gomock.NewController(t)
 	defer controller.Finish()
 
-	recUsecase := mock_recs.NewMockRepository(controller)
+	recUsecase := mock_recs.NewMockStore(controller)
 	updateRec := models.Rec{
 		Rating: 2,
 	}
@@ -123,7 +123,7 @@ func TestUpdate(t *testing.T) {
 		Return(nil)
 
 	e := echo.New()
-	h := handler.NewRecHandler(config.Config{}, recUsecase)
+	h := delivery.NewHandler(config.Config{}, recUsecase)
 
 	req := httptest.NewRequest(echo.POST, "/rec", strings.NewReader(reqJSON))
 	req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
@@ -144,7 +144,7 @@ func TestUpdateError(t *testing.T) {
 	controller := gomock.NewController(t)
 	defer controller.Finish()
 
-	recUsecase := mock_recs.NewMockRepository(controller)
+	recUsecase := mock_recs.NewMockStore(controller)
 	updateRec := models.Rec{
 		Rating: 2,
 	}
@@ -155,7 +155,7 @@ func TestUpdateError(t *testing.T) {
 		Return(errors.New("update error"))
 
 	e := echo.New()
-	h := handler.NewRecHandler(config.Config{}, recUsecase)
+	h := delivery.NewHandler(config.Config{}, recUsecase)
 
 	req := httptest.NewRequest(echo.POST, "/rec", strings.NewReader(reqJSON))
 	req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
