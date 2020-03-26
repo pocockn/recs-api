@@ -16,7 +16,6 @@ test:
     - make test
 
 deploy:
-  image: docker:latest
   variables:
     DOCKER_DRIVER: overlay2
     DOCKER_TLS_CERTDIR: "/certs"
@@ -24,9 +23,8 @@ deploy:
     - docker:19.03.0-dind
   stage: deploy
   script:
+    - GO111MODULE=on go build ./...
     - export VERSION=$(cat ./VERSION)
-    - echo "version is $VERSION"
-    - echo "login is $DOCKER_USER and pass is $DOCKER_PASS"
     - docker login -u $DOCKER_USER -p $DOCKER_PASS
     - docker build -t pococknick91/recs-api:$VERSION .
     - docker tag pococknick91/recs-api:$VERSION pococknick91/recs-api:latest
