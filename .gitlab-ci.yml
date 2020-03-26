@@ -21,5 +21,6 @@ deploy:
   script:
     - apk update
     - apk add make
+    - make push-to-registry
   tags:
     - docker
