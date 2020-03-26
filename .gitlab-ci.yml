@@ -23,6 +23,9 @@ test:
     - make test
 
 deploy:
+  image: docker:latest
   stage: deploy
   script:
     - make push-to-registry
+  tags:
+    - docker
