@@ -3,6 +3,7 @@ image: golang:1.13
 stages:
   - build
   - test
+  - deploy
 
 build:
   stage: build
@@ -13,3 +14,8 @@ test:
   stage: test
   script:
     - make test
+
+deploy:
+  stage: deploy
+  script:
+    - make push-to-registry
