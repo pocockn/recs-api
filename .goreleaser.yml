@@ -5,3 +5,8 @@ before:
     - go mod download
 builds:
   - binary: recs-api
+    goos:
+      - darwin
+      - linux
+    goarch:
+      - amd64

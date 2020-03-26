@@ -24,6 +24,8 @@ deploy:
   stage: deploy
   script:
     - curl -sL https://git.io/goreleaser | bash
+    - rm -rf dist
+    - echo "github token $GITHUB_GORELEASER"
     - GITHUB_TOKEN=$GITHUB_GORELEASER goreleaser
     - export VERSION=$(cat ./VERSION)
     - docker login -u $DOCKER_USER -p $DOCKER_PASS
