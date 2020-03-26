@@ -4,6 +4,7 @@ stages:
   - build
   - test
   - deploy
+  - deploy-dry
 
 build:
   stage: build
@@ -15,43 +16,38 @@ test:
   script:
     - make test
 
-deploy:
+deploy-dry:
   stage: deploy
-  image: docker:stable
   services:
     - docker:19.03.0-dind
   variables:
     DOCKER_DRIVER: overlay2
     DOCKER_TLS_CERTDIR: "/certs"
-    DOCKER_REGISTRY: https://index.docker.io/v1/
-    GORELEASER_IMAGE: goreleaser/goreleaser:latest
-    GIT_DEPTH: 0
-  # Only run this release job for tags, not every commit (for example).
+  script:
+    - curl -sL https://git.io/goreleaser | bash
+    - GITHUB_TOKEN="$GITHUB_GORELEASER" goreleaser --snapshot --skip-publish --rm-dist
+  tags:
+    - docker
+
+deploy:
+  stage: deploy
+  services:
+    - docker:19.03.0-dind
+  variables:
+    DOCKER_DRIVER: overlay2
+    DOCKER_TLS_CERTDIR: "/certs"
   only:
     refs:
       - tags
-  script: |
-    docker pull $GORELEASER_IMAGE
-
-    # GITLAB_TOKEN is needed to create GitLab releases.
-    # DOCKER_* are needed to push Docker images.
-    echo "github token $GITHUB_GORELEASER"
-    docker run --pull --rm --privileged \
-    -v $PWD:/go/src/gitlab.com/pocockn/recs-api \
-    -w /go/src/gitlab.com/pocockn/recs-api \
-    -v /var/run/docker.sock:/var/run/docker.sock \
-    -e $DOCKER_USER -e $DOCKER_PASS -e DOCKER_REGISTRY  \
-    -e $GITHUB_GORELEASER \
-    $GORELEASER_IMAGE release --rm-dist
-#    - curl -sL https://git.io/goreleaser | bash
-#    - rm -rf dist
-#    - echo "github token $GITHUB_GORELEASER"
-#    - GITHUB_TOKEN=$GITHUB_GORELEASER goreleaser
-#    - export VERSION=$(cat ./VERSION)
-#    - docker login -u $DOCKER_USER -p $DOCKER_PASS
-#    - docker build -t pococknick91/recs-api:$VERSION .
-#    - docker tag pococknick91/recs-api:$VERSION pococknick91/recs-api:latest
-#    - echo "=> Pushing pococknick91/recs-api:$VERSION to docker"
-#    - docker push pococknick91/recs-api
+  script:
+    - curl -sL https://git.io/goreleaser | bash
+    - echo "github token $GITHUB_GORELEASER"
+    - GITHUB_TOKEN="$GITHUB_GORELEASER" goreleaser --rm-dist
+    - export VERSION=$(cat ./VERSION)
+    - docker login -u $DOCKER_USER -p $DOCKER_PASS
+    - docker build -t pococknick91/recs-api:$VERSION .
+    - docker tag pococknick91/recs-api:$VERSION pococknick91/recs-api:latest
+    - echo "=> Pushing pococknick91/recs-api:$VERSION to docker"
+    - docker push pococknick91/recs-api
   tags:
     - docker
