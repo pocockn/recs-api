@@ -1,5 +1,13 @@
 image: golang:1.13
 
+variables:
+  DOCKER_DRIVER: overlay2
+  # Create the certificates inside this directory for both the server
+  # and client. The certificates used by the client will be created in
+  # /certs/client so we only need to share this directory with the
+  # volume mount in `config.toml`.
+  DOCKER_TLS_CERTDIR: "/certs"
+
 stages:
   - build
   - test
@@ -16,11 +24,17 @@ test:
     - make test
 
 deploy:
-  image: docker:latest
+  services:
+    - docker:19.03.0-dind
+  before_script:
+    - docker info
+    - [ -f ./version ] && export VERSION=$(cat ./version)
   stage: deploy
   script:
-    - apk update
-    - apk add make
-    - make push-to-registry
+    - docker login -u $DOCKER_USER -p $DOCKER_PASS
+    - docker build -t pococknick91/recs-api:$VERSION .
+    - docker tag pococknick91/recs-api:$VERSION pococknick91/recs-api:latest
+    - echo "=> Pushing pococknick91/recs-api:$VERSION to docker"
+    - docker push pococknick91/recs-api
   tags:
     - docker
