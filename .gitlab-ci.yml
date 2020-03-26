@@ -23,7 +23,7 @@ deploy:
     - docker:19.03.0-dind
   stage: deploy
   script:
-    - curl -sfL https://install.goreleaser.com/github.com/goreleaser/goreleaser.sh | sh
+    - curl -sL https://git.io/goreleaser | bash
     - GITHUB_TOKEN=$GITHUB_GORELEASER goreleaser
     - export VERSION=$(cat ./VERSION)
     - docker login -u $DOCKER_USER -p $DOCKER_PASS
