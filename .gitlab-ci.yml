@@ -24,7 +24,7 @@ deploy:
     - docker:19.03.0-dind
   stage: deploy
   script:
-    - export VERSION=$(cat ./version)
+    - export VERSION=$(cat ./VERSION)
     - echo "version is $VERSION"
     - echo "login is $DOCKER_USER and pass is $DOCKER_PASS"
     - docker login -u $DOCKER_USER -p $DOCKER_PASS
