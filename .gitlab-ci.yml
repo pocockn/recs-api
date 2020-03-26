@@ -26,6 +26,7 @@ deploy:
   image: docker:latest
   stage: deploy
   script:
+    - apt-get update && apt-get install make
     - make push-to-registry
   tags:
     - docker
