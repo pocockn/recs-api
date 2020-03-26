@@ -21,7 +21,7 @@ install:
 	@echo "=> Install dependencies"
 	@GO111MODULE=on go mod download
 
-push-to-registry: build-linux
+push-to-registry:
 	@docker login -u ${DOCKER_USER} -p ${DOCKER_PASS}
 	@docker build -t ${IMG} .
 	@docker tag ${IMG} ${LATEST}
