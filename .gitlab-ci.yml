@@ -23,7 +23,7 @@ deploy:
     - docker:19.03.0-dind
   stage: deploy
   script:
-    - GO111MODULE=on go build ./...
+    - GITHUB_TOKEN=${GITHUB_GORELEASER} goreleaser
     - export VERSION=$(cat ./VERSION)
     - docker login -u $DOCKER_USER -p $DOCKER_PASS
     - docker build -t pococknick91/recs-api:$VERSION .
