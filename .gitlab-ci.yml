@@ -8,9 +8,6 @@ variables:
   # volume mount in `config.toml`.
   DOCKER_TLS_CERTDIR: "/certs"
 
-before_script:
-  - docker info
-
 services:
   - docker:19.03.0-dind
 
@@ -30,6 +27,7 @@ test:
     - make test
 
 deploy:
+  image: docker:latest
   stage: deploy
   script:
     - export VERSION=$(cat ./version)
