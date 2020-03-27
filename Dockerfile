@@ -1,4 +1,4 @@
-FROM vidsyhq/go:latest
+FROM golang:latest
 LABEL maintainer="Nick Pocock"
 
 # Set the Current Working Directory inside the container
