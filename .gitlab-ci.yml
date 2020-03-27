@@ -19,9 +19,9 @@ test:
 
 release:
   stage: release
-  #  only:
-  #    refs:
-  #      - tags
+  only:
+    refs:
+      - tags
   script:
     - export GITHUB_TOKEN="$GITHUB_GORELEASER"
     - curl -sL https://git.io/goreleaser | bash
