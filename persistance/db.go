@@ -4,7 +4,10 @@ import (
 	"fmt"
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
+	"github.com/labstack/gommon/log"
 	"github.com/pocockn/recs-api/config"
+	"github.com/sirupsen/logrus"
+	"time"
 )
 
 type (
@@ -26,15 +29,31 @@ func NewConnection(config config.Config) (*GormDB, error) {
 // Connect connects to the database and passes back the connection so we can
 // use it throughout the application
 func (g GormDB) Connect() (*gorm.DB, error) {
-	gormDb, err := gorm.Open("mysql", g.url)
-	if err != nil {
-		return nil, fmt.Errorf("unable to open DB connection using GORM: %s", err)
+	var gormDB *gorm.DB
+	var err error
+
+	for i := 0; i <= 30; i++ {
+		gormDB, err = gorm.Open("mysql", g.url)
+		if err == nil {
+			err := gormDB.DB().Ping()
+			if err == nil {
+				gormDB.LogMode(true)
+				break
+			}
+		}
+
+		if i == 15 {
+			log.Fatalf("unable to connect to %s after 30 seconds", g.url)
+		}
+
+		logrus.Infof("%d attempt at connecting to the DB \n", i)
+		time.Sleep(2 * time.Second)
 	}
 
 	maxConnsPerContainer := g.maxConnections / 4
-	gormDb.DB().SetMaxOpenConns(maxConnsPerContainer / 2)
+	gormDB.DB().SetMaxOpenConns(maxConnsPerContainer / 2)
 
-	return gormDb, nil
+	return gormDB, nil
 }
 
 func generateURL(config config.Config) string {
