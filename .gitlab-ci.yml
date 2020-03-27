@@ -4,12 +4,14 @@ stages:
   - build
   - test
   - deploy
-  - deploy-dry
 
 build:
   stage: build
   script:
-    - make build
+    # Compile and name the binary as `hello`
+    - go build -o recs-api
+    # Move to gitlab build directory
+    - mv ./recs-api ${CI_PROJECT_DIR}
 
 test:
   stage: test
@@ -17,15 +19,19 @@ test:
     - make test
 
 deploy:
+  image: docker:stable
   stage: deploy
   services:
     - docker:19.03.0-dind
   variables:
     DOCKER_DRIVER: overlay2
     DOCKER_TLS_CERTDIR: "/certs"
-  only:
-    refs:
-      - tags
+  artifacts:
+    paths:
+      - ./recs-api
+#  only:
+#    refs:
+#      - tags
   script:
     - export GITHUB_TOKEN="$GITHUB_GORELEASER"
     - curl -sL https://git.io/goreleaser | bash
