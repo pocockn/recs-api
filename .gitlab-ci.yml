@@ -9,6 +9,7 @@ stages:
 build:
   stage: build
   script:
+    # Compile and name the binary as `hello`
     - go build -o recs-api
 
 test:
@@ -28,12 +29,7 @@ release:
     - docker
 
 deploy:
-  before_script:
-    - set -x
-    - VER="17.03.0-ce"
-    - curl -L -o /tmp/docker-$VER.tgz https://get.docker.com/builds/Linux/x86_64/docker-$VER.tgz
-    - tar -xz -C /tmp -f /tmp/docker-$VER.tgz
-    - mv /tmp/docker/* /usr/bin
+  image: docker:stable
   stage: deploy
   services:
     - docker:19.03.0-dind
@@ -43,11 +39,10 @@ deploy:
   artifacts:
     paths:
       - ./recs-api
-#  only:
-#    refs:
-#      - tags
+  #  only:
+  #    refs:
+  #      - tags
   script:
-    - go build -o recs-api
     - export VERSION=$(cat ./VERSION)
     - docker login -u $DOCKER_USER -p $DOCKER_PASS
     - docker build -t pococknick91/recs-api:$VERSION .

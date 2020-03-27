@@ -1,8 +1,7 @@
 FROM vidsyhq/go-base:latest
 LABEL maintainer="Nick Pocock"
 
-ARG VERSION
-LABEL version=$VERSION
+RUN go build -o recs-api
 
 ADD recs-api /
 ADD config /config
