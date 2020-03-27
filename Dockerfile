@@ -1,5 +1,13 @@
-FROM golang:latest
+FROM golang:1.14.1-alpine3.11
 LABEL maintainer="Nick Pocock"
+
+# Install the Certificate-Authority certificates for the app to be able to make
+# calls to HTTPS endpoints.
+# Git is required for fetching the dependencies.
+RUN apk add --no-cache ca-certificates git
+
+# Enable Go Modules
+ENV GO111MODULE=on
 
 # Set the Current Working Directory inside the container
 WORKDIR /app
@@ -14,6 +22,6 @@ RUN go mod download
 COPY . .
 
 # Build the Go app
-RUN go build -o recs-api
+RUN CGO_ENABLED=0 go build -o recs-api
 
-ENTRYPOINT ["/recs-api"]
+ENTRYPOINT ["/app/recs-api"]
