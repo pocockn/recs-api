@@ -3,30 +3,18 @@ image: golang:1.13
 stages:
   - build
   - test
-  - release
   - deploy
+  - release
 
 build:
   stage: build
   script:
-    # Compile and name the binary as `hello`
     - go build -o recs-api
 
 test:
   stage: test
   script:
     - make test
-
-release:
-  stage: release
-  only:
-    refs:
-      - tags
-  script:
-    - export GITHUB_TOKEN="$GITHUB_GORELEASER"
-    - curl -sL https://git.io/goreleaser | bash
-  tags:
-    - docker
 
 deploy:
   image: docker:stable
@@ -36,12 +24,9 @@ deploy:
   variables:
     DOCKER_DRIVER: overlay2
     DOCKER_TLS_CERTDIR: "/certs"
-  artifacts:
-    paths:
-      - ./recs-api
-  #  only:
-  #    refs:
-  #      - tags
+  only:
+    refs:
+      - tags
   script:
     - export VERSION=$(cat ./VERSION)
     - docker login -u $DOCKER_USER -p $DOCKER_PASS
@@ -49,5 +34,16 @@ deploy:
     - docker tag pococknick91/recs-api:$VERSION pococknick91/recs-api:latest
     - echo "=> Pushing pococknick91/recs-api:$VERSION to docker"
     - docker push pococknick91/recs-api
+  tags:
+    - docker
+
+release:
+  stage: release
+  only:
+    refs:
+      - tags
+  script:
+    - export GITHUB_TOKEN="$GITHUB_GORELEASER"
+    - curl -sL https://git.io/goreleaser | bash
   tags:
     - docker
