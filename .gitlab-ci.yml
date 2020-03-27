@@ -3,6 +3,7 @@ image: golang:1.13
 stages:
   - build
   - test
+  - release
   - deploy
 
 build:
@@ -15,6 +16,17 @@ test:
   stage: test
   script:
     - make test
+
+release:
+  stage: release
+  #  only:
+  #    refs:
+  #      - tags
+  script:
+    - export GITHUB_TOKEN="$GITHUB_GORELEASER"
+    - curl -sL https://git.io/goreleaser | bash
+  tags:
+    - docker
 
 deploy:
   image: docker:stable
@@ -31,8 +43,6 @@ deploy:
 #    refs:
 #      - tags
   script:
-    - export GITHUB_TOKEN="$GITHUB_GORELEASER"
-    - curl -sL https://git.io/goreleaser | bash
     - export VERSION=$(cat ./VERSION)
     - docker login -u $DOCKER_USER -p $DOCKER_PASS
     - docker build -t pococknick91/recs-api:$VERSION .
