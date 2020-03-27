@@ -25,8 +25,7 @@ deploy-dry:
     DOCKER_TLS_CERTDIR: "/certs"
   script:
     - export GITHUB_TOKEN="$GITHUB_GORELEASER"
-    - curl -sL https://git.io/goreleaser | bash
-    - goreleaser --snapshot --skip-publish --rm-dist
+    - curl -sL https://git.io/goreleaser --snapshot --skip-publish --rm-dist | bash
   tags:
     - docker
 
