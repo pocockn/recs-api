@@ -1,6 +1,6 @@
 # recs-api
 
-A GO REST API to rate and review recommendations from Spotify. Songs get pulled from Spotify into the DB from another microservice (currently in dev)
+A GO REST API to rate and review recommendations from Spotify.
 
 ## Getting Started
 
@@ -22,11 +22,11 @@ make test
 
 ## Deployment
 
-Each commit to master is built and tested within Gitlab, only tagged builds are released on Github and on Dockerhub.
+Each commit to master is built and tested within Gitlab, only tagged builds are released on Github and Dockerhub.
 
 ## Built With
 
-* [Go](https://golang.org/) - Main language
+* [Go](https://golang.org/)
 * [Gitlab](https://gitlab.com/) - Dependency Management
 * [Echo](https://github.com/labstack/echo) - HTTP Framework
 * [GORM](https://gorm.io/) - ORM Library
