@@ -4,7 +4,6 @@ stages:
   - build
   - test
   - deploy
-  - release
 
 build:
   stage: build
@@ -38,7 +37,7 @@ deploy:
     - docker
 
 release:
-  stage: release
+  stage: deploy
   only:
     refs:
       - tags
