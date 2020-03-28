@@ -1,9 +1,3 @@
-<h1 align="center">recs-api</h1>
-
-<p align="center">
-   A GO REST API to rate and review recommendations from a Spotify playlist.
-<p>
-
 # recs-api
 
 A GO REST API to rate and review recommendations from Spotify. Songs get pulled from Spotify into the DB from another microservice (currently in dev)
