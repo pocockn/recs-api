@@ -8,14 +8,6 @@ A GO REST API to rate and review recommendations from Spotify. Songs get pulled 
 make run
 ```
 
-### Prerequisites
-
-What things you need to install the software and how to install them
-
-```
-make install
-```
-
 ### Installing
 
 ```
